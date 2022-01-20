@@ -3,43 +3,54 @@ version: '3.3'
 
 services:
   postgres-coderunner:
+    container_name: portgres
     image: postgres:13
     restart: always
-    environment:
-      POSTGRES_PASSWORD: "Postgres2021!@jobe"
+    env_file:
+      - .env
     ports:
       - "15432:5432"
     volumes:
       - /projetos/postgresql-coderunner/data:/var/lib/postgresql/data 
-    networks:
-  #    - postgres-coderunner-network
-      - traefik-net
+    # networks:
+      # - traefik-net
       
   pgadmin-coderunner:
+    container_name: pgadmin
     image: dpage/pgadmin4
     restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "diego.lusa@sertao.ifrs.edu.br"
-      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2021!@jobe"
+    env_file:
+      - .env
     ports:
       - "16543:80"
     depends_on:
       - postgres-coderunner
-    networks:
-      - traefik-net
- #     - postgres-coderunner-network
-
-    labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.pgadmin-dev.rule=Host(`pgadmin-lab.sertao.ifrs.edu.br`)"
-        - "traefik.http.services.pgadmin-dev.loadbalancer.server.port=80"
-        - "traefik.http.routers.pgadmin-dev.entrypoints=websecure"
-        - "traefik.http.routers.pgadmin-dev.tls"
-
-
-networks:
-  traefik-net:
-     external: true 
-#  postgres-coderunner-network:
-#    driver: overlay
-
+  arangodb-coderunner:
+    container_name: arangodb
+    image: arangodb:latest
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8529:8529"
+  mariadb:
+    container_name: mariadb
+    image: docker.io/bitnami/mariadb:10.3
+    env_file:
+      - .env
+    volumes:
+      - ./mariadb:/bitnami/mariadb
+  moodle:
+    container_name: moodle
+    image: docker.io/bitnami/moodle:3
+    ports:
+      - '80:8080'
+      - '443:8443'
+    env_file:
+      - .env
+    volumes:
+      - ./moodle_app:/bitnami/moodle
+      - ./moodledata_data:/bitnami/moodledata
+    depends_on:
+      - mariadb
+    

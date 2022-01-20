@@ -1,1 +1,6 @@
 data/
+moodledata_data/sessions
+moodledata_data/localcache
+moodledata_data/cache
+moodledata_data/trashdir
+moodledata_data/temp
