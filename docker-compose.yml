@@ -1,0 +1,45 @@
+
+version: '3.3'
+
+services:
+  postgres-coderunner:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "Postgres2021!@jobe"
+    ports:
+      - "15432:5432"
+    volumes:
+      - /projetos/postgresql-coderunner/data:/var/lib/postgresql/data 
+    networks:
+  #    - postgres-coderunner-network
+      - traefik-net
+      
+  pgadmin-coderunner:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "diego.lusa@sertao.ifrs.edu.br"
+      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2021!@jobe"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres-coderunner
+    networks:
+      - traefik-net
+ #     - postgres-coderunner-network
+
+    labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pgadmin-dev.rule=Host(`pgadmin-lab.sertao.ifrs.edu.br`)"
+        - "traefik.http.services.pgadmin-dev.loadbalancer.server.port=80"
+        - "traefik.http.routers.pgadmin-dev.entrypoints=websecure"
+        - "traefik.http.routers.pgadmin-dev.tls"
+
+
+networks:
+  traefik-net:
+     external: true 
+#  postgres-coderunner-network:
+#    driver: overlay
+
