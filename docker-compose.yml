@@ -39,7 +39,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./mariadb:/bitnami/mariadb
+      - ./moodle/mariadb:/bitnami/mariadb
   moodle:
     container_name: moodle
     image: docker.io/bitnami/moodle:3
@@ -49,8 +49,15 @@ services:
     env_file:
       - .env
     volumes:
-      - ./moodle_app:/bitnami/moodle
-      - ./moodledata_data:/bitnami/moodledata
+      - ./moodle/moodle_app:/bitnami/moodle
+      - ./moodle/moodledata_data:/bitnami/moodledata
     depends_on:
       - mariadb
+  jobeinabox:
+    container_name: jobeinabox
+    build: 
+      context: ./jobeinabox
+      dockerfile: Dockerfile
+    ports: 
+      - '4000:80'
     

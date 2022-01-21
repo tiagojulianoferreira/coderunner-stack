@@ -1,5 +1,6 @@
-moodledata_data/sessions
-moodledata_data/localcache
-moodledata_data/cache
-moodledata_data/trashdir
-moodledata_data/temp
+moodle/moodledata_data/sessions
+moodle/moodledata_data/localcache
+moodle/moodledata_data/cache
+moodle/moodledata_data/trashdir
+moodle/moodledata_data/temp
+moodle/moodledata_data/moodle-cron.log
