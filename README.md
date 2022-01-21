@@ -1,4 +1,4 @@
-# Stack Coderunner by Moodle
+# Stack Coderunner para Moodle
 Este projeto inclui um stack de ferramentas úteis para utilização do plugin de tipo de questão Moodle chamado 
 [Coderunner](https://moodle.org/plugins/qtype_coderunner). Com essa pilha, além dos desenvolvedores poderem validar novas libs, o próprio professor pode subir um ambiente local, com baixa latência, para elaborar as questões que posteriormente poderiam ser importadas para o Moodle da instituição.
 
