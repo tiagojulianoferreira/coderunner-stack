@@ -25,3 +25,64 @@ Para visualizar os logs do docker-compose, execute:
 ```shell
 docker-compose logs -f
 ```
+
+## Utilizando o template de questão para PostgreSQL
+
+1. Definir o tipo de questão como sendo python3
+2. Configurar a questão para template de usuário, informando um nome especifico para o novo tipo de questão. Cuidado para não utilizar nomes já disponíveis.
+3. No trecho abaixo, informar os dados de conexão ao servidor nos campos *user*, *password*, *port* e *host*.
+```python
+    conn = CodeRunnerPG(
+        "dbname={{database}} user= <informar usuário> password=<informar senha> port=5432 host=postgres-coderunner")
+```
+
+4. Nas questões que irão utilizar o novo template, no campo *Template params*, informar as configurações específicas:
+   1. **database**: Nome da base
+   2. **queryType**: SELECT, UPDATE, INSERT, DELETE, DDL e PLSQL (este último pode ser utilizado para comandos DDL que requerem validação).
+   3. **randomSchema**: A resposta do usuário será criada em um schema aleatório
+   4. **required_commands**: Lista de comandos exigidos pela questão na resposta.
+
+```json
+{
+	"database": "lbdi_minimercado_db",
+	"queryType": "PLSQL",
+	"randomSchema": "False",
+	"required_commands": [
+	    
+	]
+}
+
+```
+5. Para a execução de blocos anônimos cuja resposta baseia-se na saída de raise notice,
+substituir pela chamada ao procedimento `moodle.p_message`. Tal recurso pode ser usado em qualquer questão que tenha código de validação específico.
+
+```sql
+
+create schema moodle;
+
+create unlogged table moodle.event_messages(
+	id bigserial not null primary key,
+	message text
+);
+
+create or replace procedure moodle.p_message(p_message text) as
+$$
+begin
+	insert into moodle.event_messages(message) values (p_message);
+end;
+$$ language plpgsql;
+
+```
+## Utilizando o template de questão para JavaScript
+
+1. Definir o tipo de questão como sendo nodejs
+2. Configurar a questão para template de usuário, informando um nome especifico para o novo tipo de questão. Cuidado para não utilizar nomes já disponíveis.
+3. Escolher o novo template criado na lista de tipos quando for criar novas questões.
+
+## Referências
+
+[Projeto Coderunner](https://coderunner.org.nz/)
+[Jobeinabox](https://github.com/trampgeek/jobeinabox)
+[Arangodb](https://www.arangodb.com/)
+[Postgres](https://www.postgresql.org/)
+[PGAdmin Web](https://www.pgadmin.org/)
